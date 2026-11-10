@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ใบเสนอราคาอุปกรณ์ โทรคมนาคมแห่งชาติ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #f1f5f9; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; padding: 0 !important; }
+            .print-container { box-shadow: none !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; }
+            input, select, textarea { border: none !important; background: transparent !important; padding: 0 !important; appearance: none; }
+        }
+    </style>
+</head>
+<body class="py-8 px-4">
+
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-8 print-container">
+        
+        <!-- Top Header: Company Info & Quotation Title -->
+        <div class="flex justify-between items-start border-b pb-6 mb-6">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800">บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน)</h2>
+                <p class="text-xs text-slate-500 mt-1">ตำบล พรหมณี อำเภอเมืองนครนายก นครนายก</p>
+                <p class="text-xs text-slate-500">เลขประจำตัวผู้เสียภาษี: 0123456789012 | โทร: 02-123-4567</p>
+            </div>
+            <div class="text-right">
+                <h1 class="text-2xl font-extrabold text-amber-600 tracking-wide">ใบเสนอราคา</h1>
+                <p class="text-sm font-semibold text-slate-600">บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน)</p>
+                <div class="mt-2 text-xs text-slate-500">
+                    <span class="bg-slate-100 px-2 py-1 rounded text-slate-700 font-medium">ต้นฉบับ (เอกสารออกเป็นชุด)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Details & Customer Grid -->
+        <div class="grid grid-cols-2 gap-6 mb-6 text-sm bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <!-- Customer Info -->
+            <div class="space-y-2">
+                <h3 class="font-bold text-slate-700 border-b pb-1">ข้อมูลลูกค้า / ผู้ซื้อ</h3>
+                <div>
+                    <label class="text-xs text-slate-500 block">ชื่อลูกค้า / บริษัท:</label>
+                    <input type="text" id="custName" placeholder="ระบุชื่อบริษัทลูกค้า" oninput="saveData()" class="w-full border rounded px-2 py-1 bg-white font-medium text-slate-800">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-500 block">ที่อยู่:</label>
+                    <textarea id="custAddress" placeholder="ที่อยู่ในการจัดส่ง / ออกใบกำกับภาษี" rows="2" oninput="saveData()" class="w-full border rounded px-2 py-1 bg-white text-slate-700 text-xs"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs text-slate-500 block">เลขประจำตัวผู้เสียภาษี:</label>
+                        <input type="text" id="custTaxId" placeholder="เลขผู้เสียภาษี 13 หลัก" oninput="saveData()" class="w-full border rounded px-2 py-1 bg-white text-xs">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-500 block">เบอร์โทรศัพท์:</label>
+                        <input type="text" id="custPhone" placeholder="เบอร์ติดต่อ" oninput="saveData()" class="w-full border rounded px-2 py-1 bg-white text-xs">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quotation Meta Info -->
+            <div class="space-y-2">
+                <h3 class="font-bold text-slate-700 border-b pb-1">รายละเอียดเอกสาร</h3>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-500 text-xs">เลขที่เอกสาร (No):</span>
+                    <input type="text" id="quotationNo" value="QT-202611-001" oninput="saveData()" class="border rounded px-2 py-1 font-semibold text-right w-36 bg-white">
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-500 text-xs">วันที่ออกเอกสาร (Date):</span>
+                    <input type="date" id="quotationDate" onchange="saveData()" class="border rounded px-2 py-1 text-right w-36 bg-white text-xs">
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-500 text-xs">วันหมดอายุ (Expire Date):</span>
+                    <input type="date" id="expireDate" onchange="saveData()" class="border rounded px-2 py-1 text-right w-36 bg-white text-xs">
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-500 text-xs">พนักงานขาย (Sales):</span>
+                    <input type="text" id="salesName" value="เจ้าหน้าที่ฝ่ายขาย" oninput="saveData()" class="border rounded px-2 py-1 text-right w-36 bg-white text-xs">
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-slate-500 text-xs">เครดิตเทอม (Credit):</span>
+                    <input type="text" id="creditTerm" value="30 วัน" oninput="saveData()" class="border rounded px-2 py-1 text-right w-36 bg-white text-xs">
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="mb-6 overflow-x-auto">
+            <table class="w-full text-left border-collapse border border-slate-300">
+                <thead>
+                    <tr class="bg-amber-500 text-white text-xs uppercase tracking-wider">
+                        <th class="p-2.5 border border-amber-600 text-center w-12">ลำดับ</th>
+                        <th class="p-2.5 border border-amber-600">รายการสินค้า / หมวดหมู่อุปกรณ์ IT & Network</th>
+                        <th class="p-2.5 border border-amber-600 text-center w-20">จำนวน</th>
+                        <th class="p-2.5 border border-amber-600 text-center w-16">หน่วย</th>
+                        <th class="p-2.5 border border-amber-600 text-right w-28">ราคา/หน่วย</th>
+                        <th class="p-2.5 border border-amber-600 text-right w-32">ราคารวม (บาท)</th>
+                        <th class="p-2.5 border border-amber-600 text-center w-12 no-print">จัดการ</th>
+                    </tr>
+                </thead>
+                <tbody id="itemRows" class="text-xs divide-y divide-slate-200">
+                    <!-- JavaScript จะฉีดข้อมูลแถวตรงนี้ -->
+                </tbody>
+            </table>
+            <button onclick="addRow()" class="mt-3 no-print bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-4 py-2 rounded-lg transition font-medium flex items-center gap-1">
+                + เพิ่มรายการอุปกรณ์
+            </button>
+        </div>
+
+        <!-- Summary Calculation & Totals -->
+        <div class="flex justify-between items-start border-t border-slate-300 pt-4 mb-6">
+            <div class="w-1/2 pr-4 text-xs text-slate-500 space-y-1">
+                <p class="font-semibold text-slate-700">เงื่อนไขเพิ่มเติม / หมายเหตุ:</p>
+                <textarea id="notes" rows="3" oninput="saveData()" class="w-full border rounded p-2 text-slate-600 bg-slate-50" placeholder="ระบุเงื่อนไขการรับประกัน การติดตั้ง หรือการจัดส่ง...">สินค้ารับประกัน 1 ปี On-site Service | กำหนดส่งมอบภายใน 3-5 วันทำการ</textarea>
+            </div>
+            
+            <div class="w-72 space-y-1.5 text-xs">
+                <div class="flex justify-between py-1">
+                    <span class="text-slate-600">รวมเป็นเงิน (Subtotal):</span>
+                    <span id="subTotal" class="font-semibold text-slate-800">0.00</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span class="text-slate-600">ส่วนลดพิเศษ (Discount):</span>
+                    <input type="number" id="discount" value="0" min="0" oninput="calculateTotal()" class="border rounded px-1 py-0.5 text-right w-24 text-xs">
+                </div>
+                <div class="flex justify-between py-1 border-t border-slate-200">
+                    <span class="text-slate-600">ราคาหลังหักส่วนลด:</span>
+                    <span id="afterDiscount" class="font-semibold text-slate-800">0.00</span>
+                </div>
+                <div class="flex justify-between py-1">
+                    <span class="text-slate-600">ภาษีมูลค่าเพิ่ม (VAT 7%):</span>
+                    <span id="vatTotal" class="font-semibold text-slate-800">0.00</span>
+                </div>
+                <div class="flex justify-between py-2 border-t-2 border-b-2 border-slate-800 text-sm font-bold text-slate-900 bg-amber-50 px-1">
+                    <span>จำนวนเงินรวมทั้งสิ้น:</span>
+                    <span id="grandTotal" class="text-amber-600">0.00</span>
+                </div>
+                <div id="thaiBahtText" class="text-center font-semibold text-slate-500 pt-1 italic text-[11px]">
+                    (ศูนย์บาทถ้วน)
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Transfer Details (ช่องทางการชำระเงิน) -->
+        <div class="border rounded-lg p-4 bg-slate-50 mb-8 flex items-center justify-between text-xs">
+            <div>
+                <h4 class="font-bold text-slate-700 mb-1">ช่องทางการชำระเงิน / Payment Method</h4>
+                <p class="text-slate-600">ธนาคารกสิกรไทย (KBANK) - บัญชีออมทรัพย์</p>
+                <p class="text-slate-600 font-semibold">เลขที่บัญชี: 123-4-56789-0</p>
+                <p class="text-slate-600">ชื่อบัญชี: บมจ. จัดจำหน่ายอุปกรณ์ IT & Network</p>
+            </div>
+            <div class="text-right text-[11px] text-slate-500">
+                <p>กรุณาโอนเงินและส่งหลักฐานการชำระเงินมาที่ Line: @itnetwork</p>
+            </div>
+        </div>
+
+        <!-- Signatures Section (ลายเซ็นผู้เกี่ยวข้องตามตัวอย่าง) -->
+        <div class="grid grid-cols-3 gap-6 text-center text-xs pt-4 border-t border-slate-200">
+            <div class="space-y-8">
+                <p class="font-semibold text-slate-700">ผู้สั่งซื้อ / ลูกค้า</p>
+                <div class="border-b border-dashed border-slate-400 w-3/4 mx-auto"></div>
+                <p class="text-slate-500">(........................................................)</p>
+                <p class="text-[11px] text-slate-400">วันที่: _____/_____/_____</p>
+            </div>
+            <div class="space-y-8">
+                <p class="font-semibold text-slate-700">ผู้เสนอราคา / พนักงานขาย</p>
+                <div class="border-b border-dashed border-slate-400 w-3/4 mx-auto"></div>
+                <p class="text-slate-500" id="signSales">( เจ้าหน้าที่ฝ่ายขาย )</p>
+                <p class="text-[11px] text-slate-400">วันที่: <span id="currentDateSign"></span></p>
+            </div>
+            <div class="space-y-8">
+                <p class="font-semibold text-slate-700">ผู้อนุมัติ / ผู้จัดการ</p>
+                <div class="border-b border-dashed border-slate-400 w-3/4 mx-auto"></div>
+                <p class="text-slate-500">( ผู้มีอำนาจลงนาม )</p>
+                <p class="text-[11px] text-slate-400">วันที่: _____/_____/_____</p>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex justify-between items-center no-print border-t pt-4">
+            <button onclick="clearData()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 px-4 py-2 rounded-lg text-xs font-medium transition">
+                ล้างข้อมูลทำใบใหม่
+            </button>
+            <div class="flex gap-3">
+                <button onclick="calculateTotal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg text-xs font-medium transition">
+                    คำนวณยอดใหม่
+                </button>
+                <button onclick="window.print()" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg text-xs font-semibold transition shadow-sm flex items-center gap-1.5">
+                    🖨️ พิมพ์ใบเสนอราคา / บันทึก PDF
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // หมวดหมู่สินค้า IT & Network พร้อมราคามาตรฐาน
+        const productCategories = [
+            {
+                category: "--- หมวด Network Switches ---",
+                items: [
+                    { name: "Cisco Catalyst 1000 24-Port Gigabit Switch", unit: "เครื่อง", price: 12500 },
+                    { name: "Cisco Catalyst 1000 48-Port Gigabit Switch", unit: "เครื่อง", price: 21000 },
+                    { name: "MikroTik Cloud Router Switch CRS326-24G-2S+RM", unit: "เครื่อง", price: 9500 }
+                ]
+            },
+            {
+                category: "--- หมวด Routers & Access Points ---",
+                items: [
+                    { name: "MikroRouter hEX (RB750Gr3) Gigabit Router", unit: "เครื่อง", price: 2200 },
+                    { name: "TP-Link Omada EAP670 AX3000 Ceiling Access Point", unit: "ตัว", price: 4500 },
+                    { name: "Ubiquiti UniFi 6 Pro Access Point (U6-Pro)", unit: "ตัว", price: 5900 }
+                ]
+            },
+            {
+                category: "--- หมวด ค่าบริการและติดตั้งระบบ ---",
+                items: [
+                    { name: "ค่าดำเนินการติดตั้งและตั้งค่าระบบ Network / วงจร", unit: "Job", price: 5770 },
+                    { name: "ค่าธรรมเนียมในการขอใช้บริการอินเทอร์เน็ต", unit: "Job", price: 1000 },
+                    { name: "ค่าเดินสาย UTP Cable CAT6 พร้อมทดสอบสัญญาน", unit: "จุด", price: 350 }
+                ]
+            }
+        ];
+
+        let items = [
+            { name: "Cisco Catalyst 1000 24-Port Gigabit Switch", unit: "เครื่อง", qty: 1, price: 12500 }
+        ];
+
+        function loadData() {
+            const savedData = localStorage.getItem('it_quotation_pro_v1');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                document.getElementById('quotationNo').value = data.quotationNo || 'QT-202611-001';
+                document.getElementById('quotationDate').value = data.quotationDate || new Date().toISOString().slice(0, 10);
+                document.getElementById('expireDate').value = data.expireDate || new Date().toISOString().slice(0, 10);
+                document.getElementById('custName').value = data.custName || '';
+                document.getElementById('custAddress').value = data.custAddress || '';
+                document.getElementById('custTaxId').value = data.custTaxId || '';
+                document.getElementById('custPhone').value = data.custPhone || '';
+                document.getElementById('salesName').value = data.salesName || 'เจ้าหน้าที่ฝ่ายขาย';
+                document.getElementById('creditTerm').value = data.creditTerm || '30 วัน';
+                document.getElementById('discount').value = data.discount || 0;
+                document.getElementById('notes').value = data.notes || '';
+                if (data.items && data.items.length > 0) {
+                    items = data.items;
+                }
+            } else {
+                document.getElementById('quotationDate').valueAsDate = new Date();
+                let exp = new Date();
+                exp.setDate(exp.getDate() + 30);
+                document.getElementById('expireDate').valueAsDate = exp;
+            }
+            
+            // แสดงวันที่ปัจจุบันในช่องลายเซ็น
+            const todayStr = new Date().toLocaleDateString('th-TH');
+            document.getElementById('currentDateSign').innerText = todayStr;
+            renderRows();
+        }
+
+        function saveData() {
+            const data = {
+                quotationNo: document.getElementById('quotationNo').value,
+                quotationDate: document.getElementById('quotationDate').value,
+                expireDate: document.getElementById('expireDate').value,
+                custName: document.getElementById('custName').value,
+                custAddress: document.getElementById('custAddress').value,
+                custTaxId: document.getElementById('custTaxId').value,
+                custPhone: document.getElementById('custPhone').value,
+                salesName: document.getElementById('salesName').value,
+                creditTerm: document.getElementById('creditTerm').value,
+                discount: document.getElementById('discount').value,
+                notes: document.getElementById('notes').value,
+                items: items
+            };
+            localStorage.setItem('it_quotation_pro_v1', JSON.stringify(data));
+            document.getElementById('signSales').innerText = `( ${document.getElementById('salesName').value} )`;
+        }
+
+        function renderRows() {
+            const tbody = document.getElementById('itemRows');
+            tbody.innerHTML = '';
+            
+            items.forEach((item, index) => {
+                const total = item.qty * item.price;
+                const tr = document.createElement('tr');
+                
+                let optionsHtml = `<option value="">-- เลือกจากหมวดหมู่สินค้า IT --</option>`;
+                productCategories.forEach(cat => {
+                    optionsHtml += `<optgroup label="${cat.category}">`;
+                    cat.items.forEach(prod => {
+                        const selected = prod.name === item.name ? 'selected' : '';
+                        optionsHtml += `<option value="${prod.name}" data-price="${prod.price}" data-unit="${prod.unit}" ${selected}>${prod.name} (${prod.price.toLocaleString()} บาท/${prod.unit})</option>`;
+                    });
+                    optionsHtml += `</optgroup>`;
+                });
+
+                tr.innerHTML = `
+                    <td class="p-2 border border-slate-300 text-center text-slate-500">${index + 1}</td>
+                    <td class="p-2 border border-slate-300 space-y-1">
+                        <select onchange="selectProduct(${index}, this)" class="w-full border rounded px-2 py-1 text-xs bg-slate-50 font-medium text-slate-700 no-print">
+                            ${optionsHtml}
+                        </select>
+                        <input type="text" value="${item.name}" onchange="updateItem(${index}, 'name', this.value)" class="w-full border rounded px-2 py-1 text-xs bg-white text-slate-800" placeholder="ชื่อสินค้าหรือบริการ">
+                    </td>
+                    <td class="p-2 border border-slate-300"><input type="number" value="${item.qty}" min="1" onchange="updateItem(${index}, 'qty', this.value)" class="w-full border rounded px-1 py-1 text-xs text-center bg-white"></td>
+                    <td class="p-2 border border-slate-300"><input type="text" value="${item.unit || 'เครื่อง'}" onchange="updateItem(${index}, 'unit', this.value)" class="w-full border rounded px-1 py-1 text-xs text-center bg-white"></td>
+                    <td class="p-2 border border-slate-300"><input type="number" value="${item.price}" min="0" onchange="updateItem(${index}, 'price', this.value)" class="w-full border rounded px-1 py-1 text-xs text-right bg-white"></td>
+                    <td class="p-2 border border-slate-300 text-right font-semibold text-slate-700">${total.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
+                    <td class="p-2 border border-slate-300 text-center no-print">
+                        <button onclick="removeItem(${index})" class="text-rose-500 hover:text-rose-700 font-bold text-base">&times;</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            calculateTotal();
+            saveData();
+        }
+
+        function selectProduct(index, selectElement) {
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const productName = selectedOption.value;
+            const productPrice = selectedOption.getAttribute('data-price');
+            const productUnit = selectedOption.getAttribute('data-unit');
+
+            if (productName) {
+                items[index].name = productName;
+                items[index].price = parseFloat(productPrice) || 0;
+                items[index].unit = productUnit || 'เครื่อง';
+                renderRows();
+            }
+        }
+
+        function addRow() {
+            items.push({ name: "", unit: "เครื่อง", qty: 1, price: 0 });
+            renderRows();
+        }
+
+        function removeItem(index) {
+            items.splice(index, 1);
+            renderRows();
+        }
+
+        function updateItem(index, field, value) {
+            if (field === 'qty' || field === 'price') {
+                items[index][field] = parseFloat(value) || 0;
+            } else {
+                items[index][field] = value;
+            }
+            saveData();
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let subtotal = items.reduce((sum, item) => sum + (item.qty * item.price), 0);
+            let discount = parseFloat(document.getElementById('discount').value) || 0;
+            let afterDiscount = Math.max(0, subtotal - discount);
+            let vat = afterDiscount * 0.07;
+            let grand = afterDiscount + vat;
+
+            document.getElementById('subTotal').innerText = subtotal.toLocaleString('th-TH', {minimumFractionDigits: 2});
+            document.getElementById('afterDiscount').innerText = afterDiscount.toLocaleString('th-TH', {minimumFractionDigits: 2});
+            document.getElementById('vatTotal').innerText = vat.toLocaleString('th-TH', {minimumFractionDigits: 2});
+            document.getElementById('grandTotal').innerText = grand.toLocaleString('th-TH', {minimumFractionDigits: 2});
+            document.getElementById('thaiBahtText').innerText = "(" + ArabicNumberToText(grand) + ")";
+            saveData();
+        }
+
+        // แปลงตัวเลขเป็นตัวหนังสือภาษาไทยสำหรับใบเสนอราคา
+        function ArabicNumberToText(N) {
+            if (N === 0) return "ศูนย์บาทถ้วน";
+            let BahtText = "";
+            let ReadNum = ["ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า"];
+            let ReadPos = ["", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน"];
+            
+            let strN = N.toFixed(2);
+            let parts = strN.split(".");
+            let intPart = parts[0];
+            let decPart = parts[1];
+
+            function convertInt(s) {
+                let t = "";
+                let len = s.length;
+                for (let i = 0; i < len; i++) {
+                    let d = parseInt(s.charAt(i));
+                    let pos = len - i - 1;
+                    if (d !== 0) {
+                        if (pos === 1 && d === 1) {
+                            t += "สิบ";
+                        } else if (pos === 1 && d === 2) {
+                            t += "ยี่สิบ";
+                        } else if (pos === 0 && d === 1 && len > 1 && s.charAt(len - 2) !== '0') {
+                            t += "เอ็ด";
+                        } else {
+                            t += ReadNum[d] + ReadPos[pos];
+                        }
+                    }
+                }
+                return t;
+            }
+
+            BahtText += convertInt(intPart) + "บาท";
+            if (decPart === "00") {
+                BahtText += "ถ้วน";
+            } else {
+                BahtText += convertInt(decPart) + "สตางค์";
+            }
+            return BahtText;
+        }
+
+        function clearData() {
+            if (confirm('คุณต้องการล้างข้อมูลทั้งหมดเพื่อเริ่มทำใบเสนอราคาใหม่ใช่หรือไม่?')) {
+                localStorage.removeItem('it_quotation_pro_v1');
+                items = [{ name: "", unit: "เครื่อง", qty: 1, price: 0 }];
+                document.getElementById('custName').value = '';
+                document.getElementById('custAddress').value = '';
+                document.getElementById('custTaxId').value = '';
+                document.getElementById('custPhone').value = '';
+                document.getElementById('discount').value = 0;
+                document.getElementById('quotationNo').value = 'QT-202611-001';
+                document.getElementById('quotationDate').valueAsDate = new Date();
+                renderRows();
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
