@@ -5,7 +5,7 @@
 // ----------------------------------------
 // 🔑 จุดที่ 1: ตั้งค่าเชื่อมต่อ SUPABASE
 // ----------------------------------------
-const SUPABASE_URL = 'https://vsmeoydbseqjzuelmnew.supabase.co/rest/v1/';
+const SUPABASE_URL = 'https://vsmeoydbseqjzuelmnew.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_BaCMogY7fSPAPSGXv9s3lg_IB1tAvwc';
 
 let supabaseClient = null;
@@ -65,12 +65,16 @@ function loadData() {
         document.getElementById('custPhone').value = data.custPhone || '';
         document.getElementById('custContact').value = data.custContact || '';
         document.getElementById('notes').value = data.notes || '1. รับประกันอุปกรณ์ 1 ปี\n2. มีระบบ Monitor การทำงานของอุปกรณ์ พร้อมทีมช่าง แก้ไขปัญหาการใช้งานเบื้องต้นภายใน 24 ชั่วโมง';
+        if (data.projectTitle && document.getElementById('projectTitle')) {
+            document.getElementById('projectTitle').value = data.projectTitle;
+        }
         if (data.items) items = data.items;
     }
     renderRows();
 }
 
 function saveData() {
+    const projectTitleEl = document.getElementById('projectTitle');
     const data = {
         docReceiveNo: document.getElementById('docReceiveNo').value,
         quotationNo: document.getElementById('quotationNo').value,
@@ -82,6 +86,7 @@ function saveData() {
         custPhone: document.getElementById('custPhone').value,
         custContact: document.getElementById('custContact').value,
         notes: document.getElementById('notes').value,
+        projectTitle: projectTitleEl ? projectTitleEl.value : 'บริการจ้างเหมาปรับปรุงระบบโทรศัพท์ภายใน (Solution IP-PBX)',
         items: items
     };
     localStorage.setItem('nt_quotation_clean_v1', JSON.stringify(data));
@@ -95,7 +100,16 @@ async function saveToSupabase() {
         alert('กรุณาตั้งค่า SUPABASE_URL และ SUPABASE_ANON_KEY ในโค้ดก่อนใช้งาน Cloud ครับ');
         return;
     }
+
+    // เช็กเกณฑ์มาร์จิ้นรวมห้ามต่ำกว่า 20% ก่อนบันทึก
+    const currentMargin = updateOverallMargin();
+    if (currentMargin < 20) {
+        alert(`⚠️ มาร์จิ้นรวมปัจจุบันอยู่ที่ ${currentMargin.toFixed(2)}% ซึ่งต่ำกว่าเกณฑ์ 20%\nกรุณาปรับเพิ่มกำไร (%) ก่อนบันทึกข้อมูล`);
+        return;
+    }
+
     saveData();
+    const projectTitleEl = document.getElementById('projectTitle');
     const payload = {
         quotation_no: document.getElementById('quotationNo').value,
         customer_name: document.getElementById('custName').value,
@@ -108,6 +122,7 @@ async function saveToSupabase() {
             custPhone: document.getElementById('custPhone').value,
             custContact: document.getElementById('custContact').value,
             notes: document.getElementById('notes').value,
+            projectTitle: projectTitleEl ? projectTitleEl.value : 'บริการจ้างเหมาปรับปรุงระบบโทรศัพท์ภายใน (Solution IP-PBX)',
             items: items
         }
     };
@@ -144,6 +159,9 @@ async function fetchFromSupabase() {
         document.getElementById('custPhone').value = qd.custPhone || '';
         document.getElementById('custContact').value = qd.custContact || '';
         document.getElementById('notes').value = qd.notes || '';
+        if (qd.projectTitle && document.getElementById('projectTitle')) {
+            document.getElementById('projectTitle').value = qd.projectTitle;
+        }
         if (qd.items) items = qd.items;
         renderRows();
         alert('ดึงข้อมูลล่าสุดจาก Cloud สำเร็จ!');
@@ -271,7 +289,7 @@ function updateItem(index, field, value) {
 }
 
 // ----------------------------------------
-// 🧮 จุดที่ 8: คำนวณยอดเงินรวมและแปลงตัวหนังสือ
+// 🧮 จุดที่ 8: คำนวณยอดเงินรวม มาร์จิ้นรวม และตัวหนังสือ
 // ----------------------------------------
 function calculateTotal() {
     let subtotal = items.reduce((sum, item) => {
@@ -288,7 +306,60 @@ function calculateTotal() {
     document.getElementById('vatTotal').innerText = vat.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     document.getElementById('grandTotal').innerText = grand.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     document.getElementById('thaiBahtText').innerText = "(" + ArabicNumberToText(grand) + ")";
+    
+    updateOverallMargin();
     saveData();
+}
+
+function updateOverallMargin() {
+    let totalCost = 0;
+    let totalSelling = 0;
+
+    const rows = document.querySelectorAll('#itemRows tr');
+    rows.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        if (inputs.length >= 4) {
+            const qty = parseFloat(inputs[1].value) || 0;
+            const cost = parseFloat(inputs[2].value) || 0;
+            const profitPct = parseFloat(inputs[3].value) || 0;
+
+            const rowCost = qty * cost;
+            const sellingUnit = cost * (1 + profitPct / 100);
+            const rowSelling = qty * sellingUnit;
+
+            totalCost += rowCost;
+            totalSelling += rowSelling;
+        }
+    });
+
+    const totalProfit = totalSelling - totalCost;
+    const overallMargin = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
+
+    const costEl = document.getElementById('totalCostDisplay');
+    const profitEl = document.getElementById('totalProfitDisplay');
+    const marginEl = document.getElementById('overallMarginDisplay');
+    const boxEl = document.getElementById('marginBox');
+    const badgeEl = document.getElementById('marginWarningBadge');
+
+    if (costEl) costEl.textContent = totalCost.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (profitEl) profitEl.textContent = totalProfit.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (marginEl) marginEl.textContent = overallMargin.toFixed(2) + '%';
+
+    if (boxEl && badgeEl && profitEl && marginEl) {
+        if (totalCost > 0 && overallMargin < 20) {
+            boxEl.className = 'flex items-center gap-4 px-4 py-2 rounded-xl border-2 border-rose-500 bg-rose-50 text-xs shadow-sm';
+            profitEl.className = 'text-rose-700 font-bold';
+            marginEl.className = 'text-sm font-extrabold text-rose-600';
+            badgeEl.classList.remove('hidden');
+        } else {
+            boxEl.className = 'flex items-center gap-4 px-4 py-2 rounded-xl border border-emerald-300 bg-emerald-50 text-xs shadow-sm';
+            profitEl.className = 'text-emerald-700 font-bold';
+            marginEl.className = 'text-sm font-extrabold text-emerald-700';
+            badgeEl.classList.add('hidden');
+        }
+    }
+
+    return overallMargin;
 }
 
 // แปลงตัวเลขเป็นตัวหนังสือภาษาไทย
@@ -342,6 +413,9 @@ function clearData() {
         document.getElementById('custAddress').value = '';
         document.getElementById('custPhone').value = '';
         document.getElementById('custContact').value = '';
+        if (document.getElementById('projectTitle')) {
+            document.getElementById('projectTitle').value = 'บริการจ้างเหมาปรับปรุงระบบโทรศัพท์ภายใน (Solution IP-PBX)';
+        }
         items = [];
         renderRows();
     }
