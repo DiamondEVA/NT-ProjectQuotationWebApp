@@ -75,17 +75,16 @@
                 <p><strong class="text-slate-800">ที่อยู่:</strong> <textarea id="custAddress" rows="2" placeholder="ระบุที่อยู่ลูกค้า" oninput="saveData()" class="w-full inline-block align-top border rounded p-1.5 bg-slate-50 focus:bg-white"></textarea></p>
                 <p><strong class="text-slate-800">โทรศัพท์:</strong> <input type="text" id="custPhone" value="" placeholder="เบอร์โทรศัพท์ลูกค้า" oninput="saveData()" class="w-48 inline-block border rounded px-1.5 py-0.5 bg-slate-50 focus:bg-white"></p>
             </div>
-            <!-- ข้อความเปิดโครงการ -->
-        <p class="text-xs text-slate-800 mb-4 leading-relaxed">
-            ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน) เป็นรัฐวิสาหกิจสังกัดกระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคมให้บริการด้านโทรคมนาคมขอนำเสนอ
-            <input type="text" id="projectTitle" value="บริการจ้างเหมาปรับปรุงระบบโทรศัพท์ภายใน (Solution IP-PBX)" oninput="saveData()" class="font-bold text-slate-900 border-b border-dashed border-slate-400 focus:border-amber-500 focus:outline-none px-1 bg-amber-50/40 print:bg-transparent print:border-none w-full max-w-md inline-block">
-            รายละเอียดบริการดังนี้
-        </p>
+            <div class="space-y-1">
+                <p><strong class="text-slate-800">ผู้ประสานงาน:</strong> <input type="text" id="custContact" value="" placeholder="ชื่อผู้ประสานงาน / เบอร์ติดต่อ" oninput="saveData()" class="w-full inline-block border rounded px-1.5 py-0.5 bg-slate-50 focus:bg-white"></p>
+            </div>
         </div>
 
-        <!-- ข้อความเปิดโครงการ -->
+        <!-- ข้อความเปิดโครงการ (พิมพ์แก้ไขชื่อบริการได้) -->
         <p class="text-xs text-slate-800 mb-4 leading-relaxed">
-            ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน) เป็นรัฐวิสาหกิจสังกัดกระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคมให้บริการด้านโทรคมนาคมขอนำเสนอ<strong>บริการจ้างเหมาปรับปรุงระบบโทรศัพท์ภายใน (Solution IP-PBX)</strong> รายละเอียดบริการดังนี้
+            ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน) เป็นรัฐวิสาหกิจสังกัดกระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคมให้บริการด้านโทรคมนาคมขอนำเสนอ
+            <input type="text" id="projectTitle" value="บริการจ้างเหมาปรับปรุงระบบโทรศัพท์ภายใน (Solution IP-PBX)" oninput="saveData()" class="font-bold text-slate-900 border-b border-dashed border-slate-400 focus:border-amber-500 focus:outline-none px-1 bg-amber-50/50 print:bg-transparent print:border-none w-full max-w-md inline-block">
+            รายละเอียดบริการดังนี้
         </p>
 
         <!-- -------------------------------------- -->
