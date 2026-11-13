@@ -1,0 +1,43 @@
+body { 
+    font-family: 'Sarabun', sans-serif; 
+    background-color: #f8fafc; 
+    color: #1e293b; 
+}
+
+/* สไตล์สำหรับพิมพ์เอกสาร A4 (จะซ่อนส่วนที่ไม่ต้องการพิมพ์ออกอัตโนมัติ) */
+@media print {
+    .no-print { 
+        display: none !important; 
+    }
+    body { 
+        background: white !important; 
+        padding: 0 !important; 
+        margin: 0 !important; 
+    }
+    .print-container { 
+        box-shadow: none !important; 
+        padding: 15px !important; 
+        margin: 0 !important; 
+        width: 100% !important; 
+        max-width: 100% !important; 
+    }
+    input, textarea, select { 
+        border: none !important; 
+        background: transparent !important; 
+        padding: 0 !important; 
+        box-shadow: none !important;
+        appearance: none;
+        color: #000 !important;
+    }
+    textarea { 
+        resize: none; 
+    }
+    table th { 
+        background-color: #eab308 !important; 
+        color: #1e293b !important; 
+        -webkit-print-color-adjust: exact; 
+    }
+    .bg-slate-100, .bg-slate-50 { 
+        background-color: transparent !important; 
+    }
+}

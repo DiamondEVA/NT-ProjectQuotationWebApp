@@ -4,48 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ใบเสนอราคา - บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน)</title>
-    <!-- Tailwind CSS CDN -->
+    
+    <!-- ========================================== -->
+    <!-- 1. EXTERNAL LIBRARIES & FONTS             -->
+    <!-- ========================================== -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-
-        body { font-family: 'Sarabun', sans-serif; background-color: #f1f5f9; color: #000; }
-        
-        /* สไตล์เฉพาะตอนกดพิมพ์ เพื่อให้เหมือนกระดาษเอกสารทางการ A4 เป๊ะๆ */
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; padding: 0 !important; margin: 0 !important; }
-            .print-container { 
-                box-shadow: none !important; 
-                padding: 15px !important; 
-                margin: 0 !important; 
-                width: 100% !important; 
-                max-width: 100% !important; 
-            }
-            input, textarea, select { 
-                border: none !important; 
-                background: transparent !important; 
-                padding: 0 !important; 
-                box-shadow: none !important;
-                appearance: none;
-                color: #000 !important;
-            }
-            textarea { resize: none; }
-            /* บังคับพิมพ์สีพื้นหลังตารางให้แสดงผล */
-            table th { background-color: #475569 !important; color: white !important; -webkit-print-color-adjust: exact; }
-            .bg-slate-100, .bg-slate-50 { background-color: transparent !important; }
-                }
-    </style>
+    
+    <!-- ========================================== -->
+    <!-- 2. STYLESHEET (CSS)                        -->
+    <!-- ========================================== -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="py-8 px-4">
 
-    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-8 print-container relative">
+    <!-- ========================================== -->
+    <!-- MAIN CONTAINER (ตัวเอกสารหลัก)               -->
+    <!-- ========================================== -->
+    <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-8 print-container relative">
         
-        <!-- Top Header: NT Corporate Header -->
-        <div class="flex justify-between items-start border-b-2 border-slate-800 pb-4 mb-4">
+        <!-- -------------------------------------- -->
+        <!-- UI ZONE: แถบซิงค์ข้อมูล SUPABASE CLOUD  -->
+        <!-- -------------------------------------- -->
+        <div class="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-xl flex justify-between items-center no-print text-xs">
+            <span id="syncStatus" class="font-medium text-amber-800">⚡ สถานะ: พร้อมเชื่อมต่อฐานข้อมูลกลาง (Supabase)</span>
+            <div class="flex gap-2">
+                <button onclick="fetchFromSupabase()" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg font-medium transition shadow-sm">
+                    📥 ดึงข้อมูลล่าสุดจาก Cloud
+                </button>
+                <button onclick="saveToSupabase()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-3 py-1.5 rounded-lg transition shadow-sm">
+                    ☁️ บันทึกขึ้น Cloud ทันที
+                </button>
+            </div>
+        </div>
+
+        <!-- -------------------------------------- -->
+        <!-- UI ZONE: หัวเอกสารบริษัท (HEADER)       -->
+        <!-- -------------------------------------- -->
+        <div class="flex justify-between items-start border-b-2 border-slate-700 pb-4 mb-4">
             <div>
                 <div class="flex items-center gap-2">
-                    <span class="text-blue-700 font-extrabold text-xl tracking-tighter">nt</span>
+                    <span class="text-amber-500 font-extrabold text-2xl tracking-tighter">nt</span>
                     <div class="text-[10px] leading-tight text-slate-700 font-semibold border-l pl-2 border-slate-400">
                         <p>บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน)</p>
                         <p>National Telecom Public Company Limited</p>
@@ -55,127 +55,141 @@
                 <p class="text-xs text-slate-500">โทรศัพท์: 037-311617 | เลขประจำตัวผู้เสียภาษี: 0107564000014</p>
             </div>
             <div class="text-right">
-    
-                <h1 class="text-lg font-bold text-slate-900 border-b border-slate-400 pb-1 mb-1"> ใบเสนอราคา / ใบสั่งซื้อ / ใบยืนยันราคา </style></h1>
+                <h1 class="text-lg font-bold text-slate-900 border-b border-slate-400 pb-1 mb-1">ใบเสนอราคา / ใบสั่งซื้อ / ใบยืนยันราคา</h1>
+                <div class="text-xs space-y-0.5 text-slate-700">
+                    <p>เลขที่รับ: <input type="text" id="docReceiveNo" value="" placeholder="ระบุเลขที่รับ" oninput="saveData()" class="w-24 text-right font-medium inline-block border rounded px-1"></p>
+                    <p>ใบเสนอราคา เลขที่: <input type="text" id="quotationNo" value="" placeholder="เช่น QT-2026-001" oninput="saveData()" class="w-36 font-semibold text-right inline-block border rounded px-1"></p>
+                    <p>วันที่: <input type="date" id="quotationDate" onchange="saveData()" class="w-32 text-right inline-block border rounded px-1"></p>
+                    <p>ส่วนงาน: <input type="text" id="department" value="ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ" oninput="saveData()" class="w-52 text-right inline-block border rounded px-1"></p>
+                    <p>โทรศัพท์: <input type="text" id="deptPhone" value="03731 1617" oninput="saveData()" class="w-24 text-right inline-block border rounded px-1"></p>
+                </div>
             </div>
         </div>
 
-        <!-- Customer Info Grid -->
+        <!-- -------------------------------------- -->
+        <!-- UI ZONE: ข้อมูลลูกค้า (CUSTOMER INFO)   -->
+        <!-- -------------------------------------- -->
         <div class="grid grid-cols-2 gap-4 mb-4 text-xs border-b border-slate-300 pb-4">
             <div class="space-y-1">
-                <p><strong class="text-slate-800">เรียน:</strong> <input type="text" id="custName" value="ผู้จัดการ เรนเดียร์ พาร์ค รีสอร์ท นครนายก" oninput="saveData()" class="w-full font-medium inline-block"></p>
-                <p><strong class="text-slate-800">ที่อยู่:</strong> <textarea id="custAddress" rows="2" oninput="saveData()" class="w-full inline-block align-top">เรนเดียร์ พาร์ค รีสอร์ท นครนายก ตำบลเขาพระ อำเภอเมืองนครนายก นครนายก 26000</textarea></p>
-                <p><strong class="text-slate-800">โทรศัพท์:</strong> <input type="text" id="custPhone" value="-" oninput="saveData()" class="w-48 inline-block"></p>
+                <p><strong class="text-slate-800">เรียน:</strong> <input type="text" id="custName" value="" placeholder="ระบุชื่อลูกค้า / ชื่อบริษัท" oninput="saveData()" class="w-full font-medium inline-block border rounded px-1.5 py-0.5 bg-slate-50 focus:bg-white"></p>
+                <p><strong class="text-slate-800">ที่อยู่:</strong> <textarea id="custAddress" rows="2" placeholder="ระบุที่อยู่ลูกค้า" oninput="saveData()" class="w-full inline-block align-top border rounded p-1.5 bg-slate-50 focus:bg-white"></textarea></p>
+                <p><strong class="text-slate-800">โทรศัพท์:</strong> <input type="text" id="custPhone" value="" placeholder="เบอร์โทรศัพท์ลูกค้า" oninput="saveData()" class="w-48 inline-block border rounded px-1.5 py-0.5 bg-slate-50 focus:bg-white"></p>
             </div>
             <div class="space-y-1">
-                <p><strong class="text-slate-800">ผู้ประสานงาน:</strong> <input type="text" id="custContact" value="085-6189999 คุณศุภพร" oninput="saveData()" class="w-full inline-block"></p>
+                <p><strong class="text-slate-800">ผู้ประสานงาน:</strong> <input type="text" id="custContact" value="" placeholder="ชื่อผู้ประสานงาน / เบอร์ติดต่อ" oninput="saveData()" class="w-full inline-block border rounded px-1.5 py-0.5 bg-slate-50 focus:bg-white"></p>
             </div>
         </div>
 
-        <!-- Project Intro Text -->
+        <!-- ข้อความเปิดโครงการ -->
         <p class="text-xs text-slate-800 mb-4 leading-relaxed">
             ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน) เป็นรัฐวิสาหกิจสังกัดกระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคมให้บริการด้านโทรคมนาคมขอนำเสนอ<strong>บริการจ้างเหมาปรับปรุงระบบโทรศัพท์ภายใน (Solution IP-PBX)</strong> รายละเอียดบริการดังนี้
         </p>
 
-        <!-- Items Table -->
+        <!-- -------------------------------------- -->
+        <!-- UI ZONE: ตารางรายการสินค้า (TABLE ITEMS)-->
+        <!-- -------------------------------------- -->
         <div class="mb-4">
-            <table class="w-full text-left border-collapse border border-slate-600 text-xs">
+            <table class="w-full text-left border-collapse border border-slate-400 text-xs">
                 <thead>
-                    <tr class="bg-slate-700 text-white font-semibold">
-                        <th class="p-2 border border-slate-600 text-center w-12">ลำดับ</th>
-                        <th class="p-2 border border-slate-600">รายการ</th>
-                        <th class="p-2 border border-slate-600 text-center w-16">จำนวน</th>
-                        <th class="p-2 border border-slate-600 text-right w-28">ราคา</th>
-                        <th class="p-2 border border-slate-600 text-right w-32">ราคารวม</th>
-                        <th class="p-2 border border-slate-600 text-center w-12 no-print">จัดการ</th>
+                    <tr class="bg-amber-500 text-slate-900 font-bold border-b-2 border-slate-600">
+                        <th class="p-2 border border-slate-400 text-center w-10">ลำดับ</th>
+                        <th class="p-2 border border-slate-400">รายการอุปกรณ์</th>
+                        <th class="p-2 border border-slate-400 text-center w-14">จำนวน</th>
+                        <th class="p-2 border border-slate-400 text-right w-24 no-print bg-slate-600 text-white">ราคาทุน (บ.)</th>
+                        <th class="p-2 border border-slate-400 text-center w-24 no-print bg-slate-600 text-white">กำไร (%)</th>
+                        <th class="p-2 border border-slate-400 text-right w-28">ราคาขาย/หน่วย</th>
+                        <th class="p-2 border border-slate-400 text-right w-32">ราคารวม (บาท)</th>
+                        <th class="p-2 border border-slate-400 text-center w-10 no-print">จัดการ</th>
                     </tr>
                 </thead>
                 <tbody id="itemRows" class="divide-y divide-slate-300">
-                    <!-- โหลดแถวข้อมูลผ่าน JS -->
+                    <!-- โครงสร้างแถวตารางถูกสร้างผ่าน JavaScript -->
                 </tbody>
             </table>
+            
+            <!-- ปุ่มเพิ่มรายการ/เลือกหมวดสินค้า -->
             <div class="mt-2 no-print flex gap-2">
-                <button onclick="addRow()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded font-medium">
+                <button onclick="addRow()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs px-3 py-1.5 rounded font-medium transition">
                     + เพิ่มรายการอุปกรณ์
                 </button>
-                <button type="button" onclick="openProductModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded font-medium">
+                <button type="button" onclick="openProductModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs px-3 py-1.5 rounded font-semibold transition">
                     📂 เลือกจากหมวดหมู่สินค้า NT
                 </button>
             </div>
         </div>
 
-        <!-- Notes & Totals Section (จัดให้อยู่ในกรอบตารางเดียวกับต้นฉบับ) -->
-        <div class="grid grid-cols-2 border border-slate-600 mb-6 text-xs">
-            <!-- หมายเหตุ -->
-            <div class="p-3 border-r border-slate-600 space-y-2">
+        <!-- -------------------------------------- -->
+        <!-- UI ZONE: สรุปราคาและหมายเหตุ (TOTALS)   -->
+        <!-- -------------------------------------- -->
+        <div class="grid grid-cols-2 border border-slate-400 mb-6 text-xs">
+            <div class="p-3 border-r border-slate-400 space-y-2">
                 <p class="font-bold text-slate-800">หมายเหตุ :</p>
-                <textarea id="notes" rows="3" oninput="saveData()" class="w-full text-xs text-slate-700 bg-transparent resize-none">1. รับประกันอุปกรณ์ 1 ปี
-2. มีระบบ Monitor การทำงานของอุปกรณ์ พร้อมทีมช่าง
-แก้ไขปัญหาการใช้งานเบื้องต้นภายใน 24 ชั่วโมง</textarea>
+                <textarea id="notes" rows="3" oninput="saveData()" class="w-full text-xs text-slate-700 bg-transparent resize-none border rounded p-1">1. รับประกันอุปกรณ์ 1 ปี
+2. มีระบบ Monitor การทำงานของอุปกรณ์ พร้อมทีมช่าง แก้ไขปัญหาการใช้งานเบื้องต้นภายใน 24 ชั่วโมง</textarea>
             </div>
             
-            <!-- ตารางสรุปราคา -->
             <div class="flex flex-col justify-between">
                 <div class="space-y-1 p-2">
                     <div class="flex justify-between py-1 border-b border-slate-200">
                         <span class="text-slate-700 font-medium">รวมราคา</span>
-                        <span id="subTotal" class="font-semibold">77,560.00</span>
+                        <span id="subTotal" class="font-semibold">0.00</span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-slate-200">
                         <span class="text-slate-700 font-medium">บวก ภาษีมูลค่าเพิ่ม 7%</span>
-                        <span id="vatTotal" class="font-semibold">5,429.20</span>
+                        <span id="vatTotal" class="font-semibold">0.00</span>
                     </div>
-                    <div class="flex justify-between py-1.5 font-bold text-slate-900 bg-slate-100 px-1">
+                    <div class="flex justify-between py-1.5 font-bold text-slate-900 bg-amber-100 px-2 rounded border border-amber-300">
                         <span>จำนวนเงินรวม</span>
-                        <span id="grandTotal">82,989.20</span>
+                        <span id="grandTotal" class="text-slate-900">0.00</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Thai Baht Text Box -->
-        <div class="border border-slate-600 border-t-0 p-2 text-center font-bold text-slate-900 text-xs mb-8 bg-slate-50">
-            <span id="thaiBahtText">(แปดหมื่นสองพันเก้าร้อยแปดสิบเก้าบาทยี่สิบสตางค์)</span>
+        <!-- ตัวหนังสือบอกจำนวนเงินภาษาไทย -->
+        <div class="border border-slate-400 border-t-0 p-2 text-center font-bold text-slate-900 text-xs mb-8 bg-amber-50/60">
+            <span id="thaiBahtText">(ศูนย์บาทถ้วน)</span>
         </div>
 
-        <!-- Signatures Section (ตามแบบฟอร์ม 3 ช่อง) -->
-        <div class="grid grid-cols-3 text-center text-xs border border-slate-600 mb-6">
-            <!-- ช่องสำหรับลูกค้า -->
-            <div class="border-r border-slate-600 p-3 space-y-6 flex flex-col justify-between">
+        <!-- -------------------------------------- -->
+        <!-- UI ZONE: โซนลายเซ็น (SIGNATURES)        -->
+        <!-- -------------------------------------- -->
+        <div class="grid grid-cols-3 text-center text-xs border border-slate-400 mb-6">
+            <div class="border-r border-slate-400 p-3 space-y-6 flex flex-col justify-between">
                 <p class="font-bold border-b border-slate-300 pb-1">สำหรับลูกค้า</p>
                 <div class="space-y-1">
                     <p class="text-slate-600">ยืนยันขอใช้บริการ</p>
-                    <div class="py-4 font-serif italic text-blue-900 text-sm font-bold"></div>
+                    <div class="py-4"></div>
                     <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-1">
-                        <input type="text" value="( คุณศุภพร ผููลชม )" class="w-full text-center text-[11px] bg-transparent">
+                        <input type="text" value="" placeholder="( ลายเซ็นลูกค้า )" class="w-full text-center text-[11px] bg-transparent">
                     </div>
                 </div>
             </div>
 
-            <!-- ช่องผู้อนุมัติ -->
-            <div class="border-r border-slate-600 p-3 space-y-6 flex flex-col justify-between">
+            <div class="border-r border-slate-400 p-3 space-y-6 flex flex-col justify-between">
                 <p class="font-bold border-b border-slate-300 pb-1">ผู้อนุมัติ</p>
                 <div class="space-y-1">
-                    <div class="py-4 font-serif text-slate-800 text-xs"></div>
-                    <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-1 ">
-                        <input type="text" value="( นายนิธิโรจน์ จีรถาวรพงศ์ )" class="w-full text-center text-[11px] bg-transparent">
+                    <div class="py-4"></div>
+                    <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-1">
+                        <input type="text" value="" placeholder="( ผู้อนุมัติ )" class="w-full text-center text-[11px] bg-transparent">
                     </div>
                 </div>
             </div>
 
-            <!-- ช่องผู้จัดทำ -->
             <div class="p-3 space-y-6 flex flex-col justify-between">
                 <p class="font-bold border-b border-slate-300 pb-1">ผู้จัดทำ</p>
                 <div class="space-y-1">
-                    <div class="py-4 font-serif text-slate-800 text-xs"></div>
+                    <div class="py-4"></div>
                     <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-1">
-                        <input type="text" value="( นายสมาน สุขชม )" class="w-full text-center text-[11px] bg-transparent">
+                        <input type="text" value="" placeholder="( ผู้จัดทำ )" class="w-full text-center text-[11px] bg-transparent">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer Bottom Note -->
+        <!-- -------------------------------------- -->
+        <!-- UI ZONE: ท้ายกระดาษ (FOOTER)             -->
+        <!-- -------------------------------------- -->
         <div class="text-[9px] text-slate-500 flex justify-between items-end border-t border-slate-300 pt-2">
             <div>
                 <p>99 ถนนแจ้งวัฒนะ แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร 10210</p>
@@ -187,7 +201,9 @@
             </div>
         </div>
 
-        <!-- Action Buttons (ซ่อนตอนพิมพ์) -->
+        <!-- -------------------------------------- -->
+        <!-- UI ZONE: ปุ่มแอ็กชันล่างสุด (ACTIONS)    -->
+        <!-- -------------------------------------- -->
         <div class="mt-8 flex justify-between items-center no-print border-t pt-4">
             <button onclick="clearData()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 px-4 py-2 rounded-lg text-xs font-medium transition">
                 ล้างข้อมูลทำใบใหม่
@@ -204,11 +220,13 @@
 
     </div>
 
-    <!-- Modal เลือกสินค้าแยกหมวดหมู่ -->
+    <!-- ========================================== -->
+    <!-- MODAL POPUP: เลือกหมวดหมู่และอุปกรณ์       -->
+    <!-- ========================================== -->
     <div id="productModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
             <div class="bg-slate-800 text-white px-5 py-4 flex justify-between items-center">
-                <h3 class="font-bold text-base">🗂️ เลือกหมวดหมู่และอุปกรณ์ NT</h3>
+                <h3 class="font-bold text-base text-amber-400">🗂️ เลือกหมวดหมู่และอุปกรณ์ NT</h3>
                 <button onclick="closeProductModal()" class="text-white hover:text-slate-200 text-xl font-bold">&times;</button>
             </div>
             <div class="p-4 overflow-y-auto space-y-3 flex-1 bg-slate-50" id="modalCategoryList"></div>
@@ -218,244 +236,9 @@
         </div>
     </div>
 
-    <!-- JavaScript Logic -->
-    <script>
-        const productCategories = [
-            {
-                category: "หมวด ตู้สาขาและอุปกรณ์ระบบไอพี (IP-PBX & Rack)",
-                items: [
-                    { name: "ตู้ Rack จัดเก็บอุปกรณ์", price: 4370 },
-                    { name: "ตู้สาขาโทรศัพท์ระบบไอพี (IP-PBX)", price: 21740 },
-                    { name: "FXS Gateway แปลงสัญญาณโทรศัพท์ให้เป็น VOIP - ขนาด 24 port", price: 30940 }
-                ]
-            },
-            {
-                category: "หมวด อุปกรณ์กระจายสัญญาณและสาย LAN",
-                items: [
-                    { name: "อุปกรณ์กระจายสาย LAN แบบ PoE ขนาด 8 ช่อง", price: 5445 },
-                    { name: "เครื่องโทรศัพท์ ระบบ IP (ประเภท LAN)", price: 2085 },
-                    { name: "เครื่องโทรศัพท์ Analog Phone", price: 590 }
-                ]
-            },
-            {
-                category: "หมวด ค่าบริการติดตั้งและโครง network",
-                items: [
-                    { name: "ค่าดำเนินการติดตั้งและตั้งค่าระบบ IP-PBX / วงจร", price: 5770 },
-                    { name: "ค่าธรรมเนียมในการขอใช้บริการอินเทอร์เน็ต", price: 1000 },
-                    { name: "ค่าเดินสาย UTP Cable CAT6 พร้อมทดสอบสัญญาณ", price: 350 }
-                ]
-            }
-        ];
-
-        let items = [
-            { name: "ตู้ Rack จัดเก็บอุปกรณ์", qty: 1, price: 4370 },
-            { name: "ตู้สาขาโทรศัพท์ระบบไอพี (IP-PBX)", qty: 1, price: 21740 },
-            { name: "FXS Gateway แปลงสัญญาณโทรศัพท์ให้เป็น VOIP - ขนาด 24 port", qty: 1, price: 30940 },
-            { name: "อุปกรณ์กระจายสาย LAN แบบ PoE ขนาด 8 ช่อง", qty: 1, price: 5445 },
-            { name: "เครื่องโทรศัพท์ ระบบ IP (ประเภท LAN)", qty: 1, price: 2085 },
-            { name: "เครื่องโทรศัพท์ Analog Phone", qty: 22, price: 590 }
-        ];
-
-        let activeRowIndex = null;
-
-        function loadData() {
-            const savedData = localStorage.getItem('nt_quotation_reindeer_v2');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                document.getElementById('docReceiveNo').value = data.docReceiveNo || '1004';
-                document.getElementById('quotationNo').value = data.quotationNo || 'เอ็นที ขบอป.1 (นย.)/ 84';
-                document.getElementById('quotationDate').value = data.quotationDate || '2026-06-25';
-                document.getElementById('department').value = data.department || 'ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ';
-                document.getElementById('deptPhone').value = data.deptPhone || '03731 1617';
-                document.getElementById('custName').value = data.custName || '';
-                document.getElementById('custAddress').value = data.custAddress || '';
-                document.getElementById('custPhone').value = data.custPhone || '';
-                document.getElementById('custContact').value = data.custContact || '';
-                document.getElementById('notes').value = data.notes || '';
-                if (data.items && data.items.length > 0) {
-                    items = data.items;
-                }
-            }
-            renderRows();
-        }
-
-        function saveData() {
-            const data = {
-                docReceiveNo: document.getElementById('docReceiveNo').value,
-                quotationNo: document.getElementById('quotationNo').value,
-                quotationDate: document.getElementById('quotationDate').value,
-                department: document.getElementById('department').value,
-                deptPhone: document.getElementById('deptPhone').value,
-                custName: document.getElementById('custName').value,
-                custAddress: document.getElementById('custAddress').value,
-                custPhone: document.getElementById('custPhone').value,
-                custContact: document.getElementById('custContact').value,
-                notes: document.getElementById('notes').value,
-                items: items
-            };
-            localStorage.setItem('nt_quotation_reindeer_v2', JSON.stringify(data));
-        }
-
-        function renderRows() {
-            const tbody = document.getElementById('itemRows');
-            tbody.innerHTML = '';
-            
-            items.forEach((item, index) => {
-                const total = item.qty * item.price;
-                const tr = document.createElement('tr');
-                
-                tr.innerHTML = `
-                    <td class="p-2 border border-slate-600 text-center text-slate-700">${index + 1}</td>
-                    <td class="p-2 border border-slate-600">
-                        <input type="text" value="${item.name}" onchange="updateItem(${index}, 'name', this.value)" class="w-full text-xs font-medium text-slate-900 bg-transparent">
-                    </td>
-                    <td class="p-2 border border-slate-600 text-center">
-                        <input type="number" value="${item.qty}" min="1" onchange="updateItem(${index}, 'qty', this.value)" class="w-12 text-center text-xs bg-transparent font-semibold">
-                    </td>
-                    <td class="p-2 border border-slate-600 text-right">
-                        <input type="number" value="${item.price}" min="0" onchange="updateItem(${index}, 'price', this.value)" class="w-24 text-right text-xs bg-transparent">
-                    </td>
-                    <td class="p-2 border border-slate-600 text-right font-semibold text-slate-900">${total.toLocaleString('th-TH', {minimumFractionDigits: 2})}</td>
-                    <td class="p-2 border border-slate-600 text-center no-print">
-                        <button onclick="removeItem(${index})" class="text-rose-600 font-bold text-sm">&times;</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-            calculateTotal();
-            saveData();
-        }
-
-        function openProductModal() {
-            const container = document.getElementById('modalCategoryList');
-            container.innerHTML = '';
-
-            productCategories.forEach((cat, catIdx) => {
-                const groupDiv = document.createElement('div');
-                groupDiv.className = 'bg-white border rounded-xl overflow-hidden shadow-sm';
-                groupDiv.innerHTML = `
-                    <button type="button" onclick="toggleCategory(${catIdx})" class="w-full bg-slate-100 hover:bg-slate-200 px-4 py-2.5 text-left font-bold text-slate-700 text-xs flex justify-between items-center transition">
-                        <span>📁 ${cat.category}</span>
-                        <span id="icon-${catIdx}" class="text-slate-500 font-bold">▼ พับเก็บ</span>
-                    </button>
-                    <div id="cat-items-${catIdx}" class="divide-y divide-slate-100 p-2 space-y-1">
-                        ${cat.items.map(prod => `
-                            <div onclick="addProductFromModal('${prod.name.replace(/'/g, "\\'")}', ${prod.price})" class="p-2 hover:bg-blue-50 rounded-lg cursor-pointer flex justify-between items-center transition text-xs">
-                                <span class="text-slate-700 font-medium">${prod.name}</span>
-                                <span class="text-blue-700 font-bold whitespace-nowrap ml-2">${prod.price.toLocaleString()} บาท</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(groupDiv);
-            });
-
-            document.getElementById('productModal').classList.remove('hidden');
-        }
-
-        function toggleCategory(catIdx) {
-            const content = document.getElementById(`cat-items-${catIdx}`);
-            const icon = document.getElementById(`icon-${catIdx}`);
-            if (content.style.display === 'none') {
-                content.style.display = 'block';
-                icon.innerText = '▼ พับเก็บ';
-            } else {
-                content.style.display = 'none';
-                icon.innerText = '▶ กดเพื่อขยาย';
-            }
-        }
-
-        function closeProductModal() {
-            document.getElementById('productModal').classList.add('hidden');
-        }
-
-        function addProductFromModal(name, price) {
-            items.push({ name: name, qty: 1, price: price });
-            renderRows();
-            closeProductModal();
-        }
-
-        function addRow() {
-            items.push({ name: "รายการอุปกรณ์ใหม่", qty: 1, price: 0 });
-            renderRows();
-        }
-
-        function removeItem(index) {
-            items.splice(index, 1);
-            renderRows();
-        }
-
-        function updateItem(index, field, value) {
-            if (field === 'qty' || field === 'price') {
-                items[index][field] = parseFloat(value) || 0;
-            } else {
-                items[index][field] = value;
-            }
-            renderRows();
-        }
-
-        function calculateTotal() {
-            let subtotal = items.reduce((sum, item) => sum + (item.qty * item.price), 0);
-            let vat = subtotal * 0.07;
-            let grand = subtotal + vat;
-
-            document.getElementById('subTotal').innerText = subtotal.toLocaleString('th-TH', {minimumFractionDigits: 2});
-            document.getElementById('vatTotal').innerText = vat.toLocaleString('th-TH', {minimumFractionDigits: 2});
-            document.getElementById('grandTotal').innerText = grand.toLocaleString('th-TH', {minimumFractionDigits: 2});
-            document.getElementById('thaiBahtText').innerText = "(" + ArabicNumberToText(grand) + ")";
-            saveData();
-        }
-
-        function ArabicNumberToText(N) {
-            if (N === 0) return "(ศูนย์บาทถ้วน)";
-            let BahtText = "";
-            let ReadNum = ["ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า"];
-            let ReadPos = ["", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน"];
-            
-            let strN = N.toFixed(2);
-            let parts = strN.split(".");
-            let intPart = parts[0];
-            let decPart = parts[1];
-
-            function convertInt(s) {
-                let t = "";
-                let len = s.length;
-                for (let i = 0; i < len; i++) {
-                    let d = parseInt(s.charAt(i));
-                    let pos = len - i - 1;
-                    if (d !== 0) {
-                        if (pos === 1 && d === 1) {
-                            t += "สิบ";
-                        } else if (pos === 1 && d === 2) {
-                            t += "ยี่สิบ";
-                        } else if (pos === 0 && d === 1 && len > 1 && s.charAt(len - 2) !== '0') {
-                            t += "เอ็ด";
-                        } else {
-                            t += ReadNum[d] + ReadPos[pos];
-                        }
-                    }
-                }
-                return t;
-            }
-
-            BahtText += convertInt(intPart) + "บาท";
-            if (decPart === "00") {
-                BahtText += "ถ้วน";
-            } else {
-                BahtText += convertInt(decPart) + "สตางค์";
-            }
-            return "(" + BahtText + ")";
-        }
-
-        function clearData() {
-            if (confirm('คุณต้องการล้างข้อมูลทั้งหมดเพื่อเริ่มทำใบเสนอราคาใหม่ใช่หรือไม่?')) {
-                localStorage.removeItem('nt_quotation_reindeer_v2');
-                items = [];
-                renderRows();
-            }
-        }
-
-        loadData();
-    </script>
+    <!-- ========================================== -->
+    <!-- 3. JAVASCRIPT LOGIC                        -->
+    <!-- ========================================== -->
+    <script src="script.js"></script>
 </body>
 </html>
