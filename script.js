@@ -104,7 +104,7 @@ async function saveToSupabase() {
     // เช็กเกณฑ์มาร์จิ้นรวมห้ามต่ำกว่า 20% ก่อนบันทึก
     const currentMargin = updateOverallMargin();
     if (currentMargin < 20) {
-        alert(`⚠️ มาร์จิ้นรวมปัจจุบันอยู่ที่ ${currentMargin.toFixed(2)}% ซึ่งต่ำกว่าเกณฑ์ 20%\nกรุณาปรับเพิ่มกำไร (%) ก่อนบันทึกข้อมูล`);
+        alert(`⚠️ มาร์จิ้นรวมปัจจุบันอยู่ที่ ${currentMargin.toFixed(2)}% ซึ่งต่ำกว่าเกณฑ์ 20%\nกรุณาปรับเพิ่มกำไร (%) หรือกำหนดมาร์จิ้นรวมอย่างน้อย 20% ก่อนบันทึกข้อมูล`);
         return;
     }
 
@@ -177,7 +177,7 @@ function renderRows() {
     
     items.forEach((item, index) => {
         let cost = parseFloat(item.cost) || 0;
-        let profit = parseFloat(item.profit) || 20;
+        let profit = (item.profit !== undefined && item.profit !== '' && !isNaN(parseFloat(item.profit))) ? parseFloat(item.profit) : 20;
         let unitPrice = cost * (1 + (profit / 100));
         item.price = unitPrice;
 
@@ -196,7 +196,7 @@ function renderRows() {
                 <input type="number" value="${cost}" min="0" onchange="updateItem(${index}, 'cost', this.value)" class="w-20 text-right text-xs bg-transparent">
             </td>
             <td class="p-2 border border-slate-400 text-center no-print">
-                <input type="number" value="${profit}" min="15" max="30" step="1" onchange="updateItem(${index}, 'profit', this.value)" class="w-16 text-center text-xs bg-amber-50 border border-amber-300 rounded px-1 font-semibold text-slate-900">
+                <input type="number" value="${profit}" min="0" step="0.1" onchange="updateItem(${index}, 'profit', this.value)" class="w-16 text-center text-xs bg-amber-50 border border-amber-300 rounded px-1 font-semibold text-slate-900">
             </td>
             <td class="p-2 border border-slate-400 text-right font-medium text-slate-800">
                 ${unitPrice.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})}
@@ -261,7 +261,9 @@ function closeProductModal() {
 }
 
 function addProductFromModal(name, cost) {
-    items.push({ name: name, qty: 1, cost: cost, profit: 20 });
+    const currentTarget = parseFloat(document.getElementById('overallMarginInput')?.value);
+    const defaultProfit = (!isNaN(currentTarget) && currentTarget > 0) ? currentTarget : 20;
+    items.push({ name: name, qty: 1, cost: cost, profit: defaultProfit });
     renderRows();
     closeProductModal();
 }
@@ -270,7 +272,9 @@ function addProductFromModal(name, cost) {
 // ➕ จุดที่ 7: ฟังก์ชันจัดการแถว เพิ่ม-ลบ-อัปเดต
 // ----------------------------------------
 function addRow() {
-    items.push({ name: "", qty: 1, cost: 0, profit: 20 });
+    const currentTarget = parseFloat(document.getElementById('overallMarginInput')?.value);
+    const defaultProfit = (!isNaN(currentTarget) && currentTarget > 0) ? currentTarget : 20;
+    items.push({ name: "", qty: 1, cost: 0, profit: defaultProfit });
     renderRows();
 }
 
@@ -294,7 +298,7 @@ function updateItem(index, field, value) {
 function calculateTotal() {
     let subtotal = items.reduce((sum, item) => {
         let c = parseFloat(item.cost) || 0;
-        let p = parseFloat(item.profit) || 20;
+        let p = (item.profit !== undefined && item.profit !== '' && !isNaN(parseFloat(item.profit))) ? parseFloat(item.profit) : 20;
         let uPrice = c * (1 + (p / 100));
         return sum + (item.qty * uPrice);
     }, 0);
@@ -311,25 +315,34 @@ function calculateTotal() {
     saveData();
 }
 
+// เมื่อพิมพ์กำหนด % ในช่อง "มาร์จิ้นรวม" -> ปรับกำไร (%) ของทุกรายการในตารางให้อัตโนมัติ
+function applyTargetMargin(targetValue) {
+    const target = parseFloat(targetValue);
+    if (isNaN(target) || target < 0) return;
+
+    items.forEach(item => {
+        item.profit = target;
+    });
+
+    renderRows();
+}
+
+// คำนวณและอัปเดตกล่องมาร์จิ้นรวม: (กำไรรวม / ทุนรวม) * 100
 function updateOverallMargin() {
     let totalCost = 0;
     let totalSelling = 0;
 
-    const rows = document.querySelectorAll('#itemRows tr');
-    rows.forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        if (inputs.length >= 4) {
-            const qty = parseFloat(inputs[1].value) || 0;
-            const cost = parseFloat(inputs[2].value) || 0;
-            const profitPct = parseFloat(inputs[3].value) || 0;
+    items.forEach(item => {
+        const qty = parseFloat(item.qty) || 0;
+        const cost = parseFloat(item.cost) || 0;
+        const profitPct = (item.profit !== undefined && item.profit !== '' && !isNaN(parseFloat(item.profit))) ? parseFloat(item.profit) : 20;
 
-            const rowCost = qty * cost;
-            const sellingUnit = cost * (1 + profitPct / 100);
-            const rowSelling = qty * sellingUnit;
+        const rowCost = qty * cost;
+        const sellingUnit = cost * (1 + profitPct / 100);
+        const rowSelling = qty * sellingUnit;
 
-            totalCost += rowCost;
-            totalSelling += rowSelling;
-        }
+        totalCost += rowCost;
+        totalSelling += rowSelling;
     });
 
     const totalProfit = totalSelling - totalCost;
@@ -337,24 +350,24 @@ function updateOverallMargin() {
 
     const costEl = document.getElementById('totalCostDisplay');
     const profitEl = document.getElementById('totalProfitDisplay');
-    const marginEl = document.getElementById('overallMarginDisplay');
+    const marginInputEl = document.getElementById('overallMarginInput');
     const boxEl = document.getElementById('marginBox');
     const badgeEl = document.getElementById('marginWarningBadge');
 
     if (costEl) costEl.textContent = totalCost.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     if (profitEl) profitEl.textContent = totalProfit.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    if (marginEl) marginEl.textContent = overallMargin.toFixed(2) + '%';
+    if (marginInputEl) marginInputEl.value = totalCost > 0 ? overallMargin.toFixed(2) : (marginInputEl.value || '20.00');
 
-    if (boxEl && badgeEl && profitEl && marginEl) {
+    if (boxEl && badgeEl && profitEl && marginInputEl) {
         if (totalCost > 0 && overallMargin < 20) {
             boxEl.className = 'flex items-center gap-4 px-4 py-2 rounded-xl border-2 border-rose-500 bg-rose-50 text-xs shadow-sm';
             profitEl.className = 'text-rose-700 font-bold';
-            marginEl.className = 'text-sm font-extrabold text-rose-600';
+            marginInputEl.className = 'w-16 text-center text-sm font-extrabold text-rose-600 bg-white border-2 border-rose-400 rounded px-1 py-0.5 focus:outline-none';
             badgeEl.classList.remove('hidden');
         } else {
             boxEl.className = 'flex items-center gap-4 px-4 py-2 rounded-xl border border-emerald-300 bg-emerald-50 text-xs shadow-sm';
             profitEl.className = 'text-emerald-700 font-bold';
-            marginEl.className = 'text-sm font-extrabold text-emerald-700';
+            marginInputEl.className = 'w-16 text-center text-sm font-extrabold text-emerald-700 bg-white border border-emerald-400 rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-amber-400';
             badgeEl.classList.add('hidden');
         }
     }

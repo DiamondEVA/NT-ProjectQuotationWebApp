@@ -17,24 +17,24 @@
     <!-- ========================================== -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="py-8 px-4">
+<body class="py-3 px-2 sm:py-6 sm:px-4 md:py-8">
 
     <!-- ========================================== -->
     <!-- MAIN CONTAINER (ตัวเอกสารหลัก)               -->
     <!-- ========================================== -->
-    <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-8 print-container relative">
+    <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 print-container relative">
         
         <!-- -------------------------------------- -->
         <!-- UI ZONE: แถบซิงค์ข้อมูล SUPABASE CLOUD  -->
         <!-- -------------------------------------- -->
-        <div class="mb-6 p-3 bg-amber-50 border border-amber-200 rounded-xl flex justify-between items-center no-print text-xs">
+        <div class="mb-4 sm:mb-6 p-3 bg-amber-50 border border-amber-200 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2.5 no-print text-xs">
             <span id="syncStatus" class="font-medium text-amber-800">⚡ สถานะ: พร้อมเชื่อมต่อฐานข้อมูลกลาง (Supabase)</span>
-            <div class="flex gap-2">
-                <button onclick="fetchFromSupabase()" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg font-medium transition shadow-sm">
-                    📥 ดึงข้อมูลล่าสุดจาก Cloud
+            <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                <button onclick="fetchFromSupabase()" class="flex-1 sm:flex-none justify-center bg-slate-700 hover:bg-slate-800 text-white px-3 py-1.5 rounded-lg font-medium transition shadow-sm">
+                    📥 ดึงข้อมูลล่าสุด
                 </button>
-                <button onclick="saveToSupabase()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-3 py-1.5 rounded-lg transition shadow-sm">
-                    ☁️ บันทึกขึ้น Cloud ทันที
+                <button onclick="saveToSupabase()" class="flex-1 sm:flex-none justify-center bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-3 py-1.5 rounded-lg transition shadow-sm">
+                    ☁️ บันทึกขึ้น Cloud
                 </button>
             </div>
         </div>
@@ -42,11 +42,11 @@
         <!-- -------------------------------------- -->
         <!-- UI ZONE: หัวเอกสารบริษัท (HEADER)       -->
         <!-- -------------------------------------- -->
-        <div class="flex justify-between items-start border-b-2 border-slate-700 pb-4 mb-4">
+        <div class="flex flex-col md:flex-row print:flex-row justify-between items-start border-b-2 border-slate-700 pb-3 mb-3 gap-4">
             <div>
                 <div class="flex items-center gap-2">
                     <span class="text-amber-500 font-extrabold text-2xl tracking-tighter">nt</span>
-                    <div class="text-[10px] leading-tight text-slate-700 font-semibold border-l pl-2 border-slate-400">
+                    <div class="text-[11px] sm:text-[10px] leading-tight text-slate-700 font-semibold border-l pl-2 border-slate-400">
                         <p>บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน)</p>
                         <p>National Telecom Public Company Limited</p>
                     </div>
@@ -54,14 +54,30 @@
                 <p class="text-xs text-slate-600 mt-2">ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ (จังหวัดนครนายก)</p>
                 <p class="text-xs text-slate-500">โทรศัพท์: 037-311617 | เลขประจำตัวผู้เสียภาษี: 0107564000014</p>
             </div>
-            <div class="text-right">
-                <h1 class="text-lg font-bold text-slate-900 border-b border-slate-400 pb-1 mb-1">ใบเสนอราคา / ใบสั่งซื้อ / ใบยืนยันราคา</h1>
-                <div class="text-xs space-y-0.5 text-slate-700">
-                    <p>เลขที่รับ: <input type="text" id="docReceiveNo" value="" placeholder="ระบุเลขที่รับ" oninput="saveData()" class="w-24 text-right font-medium inline-block border rounded px-1"></p>
-                    <p>ใบเสนอราคา เลขที่: <input type="text" id="quotationNo" value="" placeholder="เช่น QT-2026-001" oninput="saveData()" class="w-36 font-semibold text-right inline-block border rounded px-1"></p>
-                    <p>วันที่: <input type="date" id="quotationDate" onchange="saveData()" class="w-32 text-right inline-block border rounded px-1"></p>
-                    <p>ส่วนงาน: <input type="text" id="department" value="ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ" oninput="saveData()" class="w-52 text-right inline-block border rounded px-1"></p>
-                    <p>โทรศัพท์: <input type="text" id="deptPhone" value="03731 1617" oninput="saveData()" class="w-24 text-right inline-block border rounded px-1"></p>
+
+            <div class="w-full md:w-auto print:w-auto text-left md:text-right print:text-right bg-slate-50 md:bg-transparent p-3 md:p-0 rounded-lg border md:border-none border-slate-200">
+                <h1 class="text-base sm:text-lg font-bold text-slate-900 border-b border-slate-400 pb-1 mb-2 md:mb-1">ใบเสนอราคา / ใบสั่งซื้อ / ใบยืนยันราคา</h1>
+                <div class="text-xs space-y-1.5 md:space-y-0.5 text-slate-700">
+                    <p class="flex justify-between md:justify-end items-center gap-2">
+                        <span>เลขที่รับ:</span>
+                        <input type="text" id="docReceiveNo" value="" placeholder="ระบุเลขที่รับ" oninput="saveData()" class="w-36 md:w-24 text-left md:text-right font-medium border rounded px-1.5 py-0.5 md:py-0 bg-white">
+                    </p>
+                    <p class="flex justify-between md:justify-end items-center gap-2">
+                        <span>ใบเสนอราคา เลขที่:</span>
+                        <input type="text" id="quotationNo" value="" placeholder="เช่น QT-2026-001" oninput="saveData()" class="w-36 font-semibold text-left md:text-right border rounded px-1.5 py-0.5 md:py-0 bg-white">
+                    </p>
+                    <p class="flex justify-between md:justify-end items-center gap-2">
+                        <span>วันที่:</span>
+                        <input type="date" id="quotationDate" onchange="saveData()" class="w-36 md:w-32 text-left md:text-right border rounded px-1.5 py-0.5 md:py-0 bg-white">
+                    </p>
+                    <p class="flex justify-between md:justify-end items-center gap-2">
+                        <span>ส่วนงาน:</span>
+                        <input type="text" id="department" value="ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ" oninput="saveData()" class="w-48 sm:w-52 text-left md:text-right border rounded px-1.5 py-0.5 md:py-0 bg-white">
+                    </p>
+                    <p class="flex justify-between md:justify-end items-center gap-2">
+                        <span>โทรศัพท์:</span>
+                        <input type="text" id="deptPhone" value="03731 1617" oninput="saveData()" class="w-36 md:w-24 text-left md:text-right border rounded px-1.5 py-0.5 md:py-0 bg-white">
+                    </p>
                 </div>
             </div>
         </div>
@@ -69,59 +85,63 @@
         <!-- -------------------------------------- -->
         <!-- UI ZONE: ข้อมูลลูกค้า (CUSTOMER INFO)   -->
         <!-- -------------------------------------- -->
-        <div class="grid grid-cols-2 gap-4 mb-4 text-xs border-b border-slate-300 pb-4">
-            <div class="space-y-1">
-                <p><strong class="text-slate-800">เรียน:</strong> <input type="text" id="custName" value="" placeholder="ระบุชื่อลูกค้า / ชื่อบริษัท" oninput="saveData()" class="w-full font-medium inline-block border rounded px-1.5 py-0.5 bg-slate-50 focus:bg-white"></p>
-                <p><strong class="text-slate-800">ที่อยู่:</strong> <textarea id="custAddress" rows="2" placeholder="ระบุที่อยู่ลูกค้า" oninput="saveData()" class="w-full inline-block align-top border rounded p-1.5 bg-slate-50 focus:bg-white"></textarea></p>
-                <p><strong class="text-slate-800">โทรศัพท์:</strong> <input type="text" id="custPhone" value="" placeholder="เบอร์โทรศัพท์ลูกค้า" oninput="saveData()" class="w-48 inline-block border rounded px-1.5 py-0.5 bg-slate-50 focus:bg-white"></p>
+        <div class="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-3 md:gap-4 mb-3 text-xs border-b border-slate-300 pb-3">
+            <div class="space-y-1.5">
+                <p><strong class="text-slate-800">เรียน:</strong> <input type="text" id="custName" value="" placeholder="ระบุชื่อลูกค้า / ชื่อบริษัท" oninput="saveData()" class="w-full font-medium border rounded px-2 py-1 md:py-0.5 bg-slate-50 focus:bg-white mt-0.5"></p>
+                <p><strong class="text-slate-800">ที่อยู่:</strong> <textarea id="custAddress" rows="2" placeholder="ระบุที่อยู่ลูกค้า" oninput="saveData()" class="w-full align-top border rounded p-1.5 bg-slate-50 focus:bg-white mt-0.5"></textarea></p>
+                <p><strong class="text-slate-800">โทรศัพท์:</strong> <input type="text" id="custPhone" value="" placeholder="เบอร์โทรศัพท์ลูกค้า" oninput="saveData()" class="w-full sm:w-48 border rounded px-2 py-1 md:py-0.5 bg-slate-50 focus:bg-white mt-0.5"></p>
             </div>
-            <div class="space-y-1">
-                <p><strong class="text-slate-800">ผู้ประสานงาน:</strong> <input type="text" id="custContact" value="" placeholder="ชื่อผู้ประสานงาน / เบอร์ติดต่อ" oninput="saveData()" class="w-full inline-block border rounded px-1.5 py-0.5 bg-slate-50 focus:bg-white"></p>
+            <div class="space-y-1.5">
+                <p><strong class="text-slate-800">ผู้ประสานงาน:</strong> <input type="text" id="custContact" value="" placeholder="ชื่อผู้ประสานงาน / เบอร์ติดต่อ" oninput="saveData()" class="w-full border rounded px-2 py-1 md:py-0.5 bg-slate-50 focus:bg-white mt-0.5"></p>
             </div>
         </div>
 
         <!-- ข้อความเปิดโครงการ (พิมพ์แก้ไขชื่อบริการได้) -->
-        <p class="text-xs text-slate-800 mb-4 leading-relaxed">
+        <p class="text-xs text-slate-800 mb-3 leading-relaxed">
             ศูนย์ขายติดตามหนี้ และวิศวกรรมบริการ บริษัท โทรคมนาคมแห่งชาติ จำกัด (มหาชน) เป็นรัฐวิสาหกิจสังกัดกระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคมให้บริการด้านโทรคมนาคมขอนำเสนอ
-            <input type="text" id="projectTitle" value="บริการจ้างเหมาปรับปรุงระบบโทรศัพท์ภายใน (Solution IP-PBX)" oninput="saveData()" class="font-bold text-slate-900 border-b border-dashed border-slate-400 focus:border-amber-500 focus:outline-none px-1 bg-amber-50/50 print:bg-transparent print:border-none w-full max-w-md inline-block">
+            <input type="text" id="projectTitle" value="บริการจ้างเหมาปรับปรุงระบบโทรศัพท์ภายใน (Solution IP-PBX)" oninput="saveData()" class="font-bold text-slate-900 border-b border-dashed border-slate-400 focus:border-amber-500 focus:outline-none px-1 py-0.5 bg-amber-50/50 print:bg-transparent print:border-none w-full md:max-w-md inline-block my-0.5">
             รายละเอียดบริการดังนี้
         </p>
 
         <!-- -------------------------------------- -->
         <!-- UI ZONE: ตารางรายการสินค้า (TABLE ITEMS)-->
         <!-- -------------------------------------- -->
-        <div class="mb-4">
-            <table class="w-full text-left border-collapse border border-slate-400 text-xs">
-                <thead>
-                    <tr class="bg-amber-500 text-slate-900 font-bold border-b-2 border-slate-600">
-                        <th class="p-2 border border-slate-400 text-center w-10">ลำดับ</th>
-                        <th class="p-2 border border-slate-400">รายการอุปกรณ์</th>
-                        <th class="p-2 border border-slate-400 text-center w-14">จำนวน</th>
-                        <th class="p-2 border border-slate-400 text-right w-24 no-print bg-slate-600 text-white">ราคาทุน (บ.)</th>
-                        <th class="p-2 border border-slate-400 text-center w-24 no-print bg-slate-600 text-white">กำไร (%)</th>
-                        <th class="p-2 border border-slate-400 text-right w-28">ราคาขาย/หน่วย</th>
-                        <th class="p-2 border border-slate-400 text-right w-32">ราคารวม (บาท)</th>
-                        <th class="p-2 border border-slate-400 text-center w-10 no-print">จัดการ</th>
-                    </tr>
-                </thead>
-                <tbody id="itemRows" class="divide-y divide-slate-300">
-                    <!-- โครงสร้างแถวตารางถูกสร้างผ่าน JavaScript -->
-                </tbody>
-            </table>
+        <div class="mb-0">
+            <!-- หุ้มด้วย overflow-x-auto เพื่อให้มือถือปัดเลื่อนซ้ายขวาได้โดยตารางไม่บีบพัง -->
+            <div class="overflow-x-auto print:overflow-visible -mx-1 px-1 sm:mx-0 sm:px-0">
+                <table class="w-full min-w-[680px] md:min-w-0 print:min-w-0 text-left border-collapse border border-slate-400 text-xs">
+                    <thead>
+                        <tr class="bg-amber-500 text-slate-900 font-bold border-b-2 border-slate-600">
+                            <th class="p-1.5 border border-slate-400 text-center w-10">ลำดับ</th>
+                            <th class="p-1.5 border border-slate-400">รายการอุปกรณ์</th>
+                            <th class="p-1.5 border border-slate-400 text-center w-14">จำนวน</th>
+                            <th class="p-1.5 border border-slate-400 text-right w-24 no-print bg-slate-600 text-white">ราคาทุน (บ.)</th>
+                            <th class="p-1.5 border border-slate-400 text-center w-24 no-print bg-slate-600 text-white">กำไร (%)</th>
+                            <th class="p-1.5 border border-slate-400 text-right w-28">ราคาขาย/หน่วย</th>
+                            <th class="p-1.5 border border-slate-400 text-right w-32">ราคารวม (บาท)</th>
+                            <th class="p-1.5 border border-slate-400 text-center w-10 no-print">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemRows" class="divide-y divide-slate-300">
+                        <!-- โครงสร้างแถวตารางถูกสร้างผ่าน JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-[10px] text-slate-400 mt-1 md:hidden no-print">💡 เลื่อนตารางไปทางซ้าย-ขวาเพื่อดูช่องราคาทุนและกำไร</p>
             
-            <!-- ปุ่มเพิ่มรายการ/เลือกหมวดสินค้า + กล่องสรุปมาร์จิ้นรวม (สำหรับเจ้าหน้าที่) -->
-            <div class="mt-3 no-print flex flex-wrap justify-between items-center gap-3">
-                <div class="flex gap-2">
-                    <button onclick="addRow()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs px-3 py-1.5 rounded font-medium transition">
+            <!-- ปุ่มเพิ่มรายการ/เลือกหมวดสินค้า + กล่องกำหนดและดูมาร์จิ้นรวม -->
+            <div class="my-2.5 no-print flex flex-col lg:flex-row justify-between items-stretch lg:items-center gap-2.5">
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="addRow()" class="flex-1 sm:flex-none bg-slate-700 hover:bg-slate-800 text-white text-xs px-3 py-2 sm:py-1.5 rounded font-medium transition">
                         + เพิ่มรายการอุปกรณ์
                     </button>
-                    <button type="button" onclick="openProductModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs px-3 py-1.5 rounded font-semibold transition">
+                    <button type="button" onclick="openProductModal()" class="flex-1 sm:flex-none bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs px-3 py-2 sm:py-1.5 rounded font-semibold transition">
                         📂 เลือกจากหมวดหมู่สินค้า NT
                     </button>
                 </div>
 
-                <!-- กล่องดูมาร์จิ้นรวม (เฉพาะหน้าจอ ไม่ติดไปตอน Print) -->
-                <div id="marginBox" class="flex items-center gap-4 px-4 py-2 rounded-xl border border-emerald-300 bg-emerald-50 text-xs shadow-sm">
+                <!-- กล่องกำหนดและดูมาร์จิ้นรวม (เฉพาะหน้าจอ ไม่ติดไปตอน Print) -->
+                <div id="marginBox" class="flex flex-wrap items-center justify-between sm:justify-start gap-3 sm:gap-4 px-3 sm:px-4 py-2 sm:py-1.5 rounded-xl border border-emerald-300 bg-emerald-50 text-xs shadow-sm">
                     <div>
                         <span class="text-slate-500">ทุนรวม:</span>
                         <strong id="totalCostDisplay" class="text-slate-800">0.00</strong> บ.
@@ -130,12 +150,17 @@
                         <span class="text-slate-500">กำไรรวม:</span>
                         <strong id="totalProfitDisplay" class="text-emerald-700">0.00</strong> บ.
                     </div>
-                    <div class="border-l pl-3 border-slate-300 flex items-center gap-1.5">
-                        <span class="font-semibold text-slate-700">มาร์จิ้นรวม:</span>
-                        <span id="overallMarginDisplay" class="text-sm font-extrabold text-emerald-700">0.00%</span>
-                        <span id="marginWarningBadge" class="hidden bg-rose-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold animate-pulse">
-                            ⚠️ ต่ำกว่า 20%!
-                        </span>
+                    <div class="w-full sm:w-auto pt-1.5 sm:pt-0 border-t sm:border-t-0 sm:border-l sm:pl-3 border-slate-300 flex items-center justify-between sm:justify-start gap-1.5">
+                        <label for="overallMarginInput" class="font-semibold text-slate-700">มาร์จิ้นรวม (%):</label>
+                        <div class="flex items-center gap-1.5">
+                            <input type="number" id="overallMarginInput" value="20.00" step="0.1" min="0"
+                                onchange="applyTargetMargin(this.value)"
+                                title="พิมพ์ตัวเลข % ที่ต้องการเพื่อปรับกำไรทุกรายการพร้อมกัน"
+                                class="w-16 text-center text-sm font-extrabold text-emerald-700 bg-white border border-emerald-400 rounded px-1 py-0.5 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                            <span id="marginWarningBadge" class="hidden bg-rose-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold animate-pulse">
+                                ⚠️ ต่ำกว่า 20%!
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -144,24 +169,24 @@
         <!-- -------------------------------------- -->
         <!-- UI ZONE: สรุปราคาและหมายเหตุ (TOTALS)   -->
         <!-- -------------------------------------- -->
-        <div class="grid grid-cols-2 border border-slate-400 mb-6 text-xs">
-            <div class="p-3 border-r border-slate-400 space-y-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 border border-slate-400 mb-0 text-xs">
+            <div class="p-2 border-b md:border-b-0 md:border-r print:border-b-0 print:border-r border-slate-400 space-y-1">
                 <p class="font-bold text-slate-800">หมายเหตุ :</p>
-                <textarea id="notes" rows="3" oninput="saveData()" class="w-full text-xs text-slate-700 bg-transparent resize-none border rounded p-1">1. รับประกันอุปกรณ์ 1 ปี
+                <textarea id="notes" rows="2" oninput="saveData()" class="w-full text-xs text-slate-700 bg-transparent resize-none border rounded p-1 leading-snug">1. รับประกันอุปกรณ์ 1 ปี
 2. มีระบบ Monitor การทำงานของอุปกรณ์ พร้อมทีมช่าง แก้ไขปัญหาการใช้งานเบื้องต้นภายใน 24 ชั่วโมง</textarea>
             </div>
             
-            <div class="flex flex-col justify-between">
-                <div class="space-y-1 p-2">
-                    <div class="flex justify-between py-1 border-b border-slate-200">
+            <div class="flex flex-col justify-center">
+                <div class="space-y-0.5 p-2">
+                    <div class="flex justify-between py-0.5 border-b border-slate-200">
                         <span class="text-slate-700 font-medium">รวมราคา</span>
                         <span id="subTotal" class="font-semibold">0.00</span>
                     </div>
-                    <div class="flex justify-between py-1 border-b border-slate-200">
+                    <div class="flex justify-between py-0.5 border-b border-slate-200">
                         <span class="text-slate-700 font-medium">บวก ภาษีมูลค่าเพิ่ม 7%</span>
                         <span id="vatTotal" class="font-semibold">0.00</span>
                     </div>
-                    <div class="flex justify-between py-1.5 font-bold text-slate-900 bg-amber-100 px-2 rounded border border-amber-300">
+                    <div class="flex justify-between py-1 font-bold text-slate-900 bg-amber-100 px-2 rounded border border-amber-300">
                         <span>จำนวนเงินรวม</span>
                         <span id="grandTotal" class="text-slate-900">0.00</span>
                     </div>
@@ -169,41 +194,41 @@
             </div>
         </div>
 
-        <!-- ตัวหนังสือบอกจำนวนเงินภาษาไทย -->
-        <div class="border border-slate-400 border-t-0 p-2 text-center font-bold text-slate-900 text-xs mb-8 bg-amber-50/60">
+        <!-- ตัวหนังสือบอกจำนวนเงินภาษาไทย (ต่อชิดกล่องสรุปราคา) -->
+        <div class="border border-slate-400 border-t-0 py-1.5 px-2 text-center font-bold text-slate-900 text-xs mb-0 bg-amber-50/60">
             <span id="thaiBahtText">(ศูนย์บาทถ้วน)</span>
         </div>
 
         <!-- -------------------------------------- -->
-        <!-- UI ZONE: โซนลายเซ็น (SIGNATURES)        -->
+        <!-- UI ZONE: โซนลายเซ็น (ต่อชิดเป็นกรอบเดียวกัน) -->
         <!-- -------------------------------------- -->
-        <div class="grid grid-cols-3 text-center text-xs border border-slate-400 mb-6">
-            <div class="border-r border-slate-400 p-3 space-y-6 flex flex-col justify-between">
+        <div class="grid grid-cols-1 sm:grid-cols-3 print:grid-cols-3 text-center text-xs border border-slate-400 border-t-0 mb-3">
+            <div class="border-b sm:border-b-0 sm:border-r print:border-b-0 print:border-r border-slate-400 p-2 flex flex-col justify-between">
                 <p class="font-bold border-b border-slate-300 pb-1">สำหรับลูกค้า</p>
-                <div class="space-y-1">
-                    <p class="text-slate-600">ยืนยันขอใช้บริการ</p>
-                    <div class="py-4"></div>
-                    <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-1">
+                <div class="mt-1">
+                    <p class="text-slate-600 text-[11px]">ยืนยันขอใช้บริการ</p>
+                    <div class="py-2.5"></div>
+                    <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-0.5">
                         <input type="text" value="" placeholder="( ลายเซ็นลูกค้า )" class="w-full text-center text-[11px] bg-transparent">
                     </div>
                 </div>
             </div>
 
-            <div class="border-r border-slate-400 p-3 space-y-6 flex flex-col justify-between">
+            <div class="border-b sm:border-b-0 sm:border-r print:border-b-0 print:border-r border-slate-400 p-2 flex flex-col justify-between">
                 <p class="font-bold border-b border-slate-300 pb-1">ผู้อนุมัติ</p>
-                <div class="space-y-1">
-                    <div class="py-4"></div>
-                    <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-1">
+                <div class="mt-1">
+                    <div class="py-3.5"></div>
+                    <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-0.5">
                         <input type="text" value="" placeholder="( ผู้อนุมัติ )" class="w-full text-center text-[11px] bg-transparent">
                     </div>
                 </div>
             </div>
 
-            <div class="p-3 space-y-6 flex flex-col justify-between">
+            <div class="p-2 flex flex-col justify-between">
                 <p class="font-bold border-b border-slate-300 pb-1">ผู้จัดทำ</p>
-                <div class="space-y-1">
-                    <div class="py-4"></div>
-                    <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-1">
+                <div class="mt-1">
+                    <div class="py-3.5"></div>
+                    <div class="border-b border-dashed border-slate-500 w-3/4 mx-auto pb-0.5">
                         <input type="text" value="" placeholder="( ผู้จัดทำ )" class="w-full text-center text-[11px] bg-transparent">
                     </div>
                 </div>
@@ -213,12 +238,12 @@
         <!-- -------------------------------------- -->
         <!-- UI ZONE: ท้ายกระดาษ (FOOTER)             -->
         <!-- -------------------------------------- -->
-        <div class="text-[9px] text-slate-500 flex justify-between items-end border-t border-slate-300 pt-2">
+        <div class="text-[9px] text-slate-500 flex flex-col sm:flex-row print:flex-row justify-between items-start sm:items-end gap-1 border-t border-slate-300 pt-2">
             <div>
                 <p>99 ถนนแจ้งวัฒนะ แขวงทุ่งสองห้อง เขตหลักสี่ กรุงเทพมหานคร 10210</p>
                 <p>99 Chaengwattana Road, Thung Song Hong, Laksi, Bangkok 10210</p>
             </div>
-            <div class="text-right">
+            <div class="text-left sm:text-right print:text-right">
                 <p>www.ntplc.co.th | Contact Center 1888</p>
                 <p>เลขประจำตัวผู้เสียภาษีอากร / Tax ID: 0107564000014</p>
             </div>
@@ -227,15 +252,15 @@
         <!-- -------------------------------------- -->
         <!-- UI ZONE: ปุ่มแอ็กชันล่างสุด (ACTIONS)    -->
         <!-- -------------------------------------- -->
-        <div class="mt-8 flex justify-between items-center no-print border-t pt-4">
-            <button onclick="clearData()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 px-4 py-2 rounded-lg text-xs font-medium transition">
+        <div class="mt-6 flex flex-col-reverse sm:flex-row justify-between items-stretch sm:items-center gap-2.5 no-print border-t pt-4">
+            <button onclick="clearData()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 px-4 py-2.5 sm:py-2 rounded-lg text-xs font-medium transition text-center">
                 ล้างข้อมูลทำใบใหม่
             </button>
-            <div class="flex gap-3">
-                <button onclick="calculateTotal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg text-xs font-medium transition">
+            <div class="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                <button onclick="calculateTotal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2.5 sm:py-2 rounded-lg text-xs font-medium transition text-center">
                     คำนวณยอดใหม่
                 </button>
-                <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white px-6 py-2 rounded-lg text-xs font-semibold transition shadow-sm flex items-center gap-1.5">
+                <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-900 text-white px-6 py-2.5 sm:py-2 rounded-lg text-xs font-semibold transition shadow-sm flex items-center justify-center gap-1.5">
                     🖨️ พิมพ์ใบเสนอราคา / บันทึก PDF
                 </button>
             </div>
@@ -246,15 +271,15 @@
     <!-- ========================================== -->
     <!-- MODAL POPUP: เลือกหมวดหมู่และอุปกรณ์       -->
     <!-- ========================================== -->
-    <div id="productModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
+    <div id="productModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-3 sm:p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-            <div class="bg-slate-800 text-white px-5 py-4 flex justify-between items-center">
-                <h3 class="font-bold text-base text-amber-400">🗂️ เลือกหมวดหมู่และอุปกรณ์ NT</h3>
-                <button onclick="closeProductModal()" class="text-white hover:text-slate-200 text-xl font-bold">&times;</button>
+            <div class="bg-slate-800 text-white px-4 sm:px-5 py-3.5 sm:py-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm sm:text-base text-amber-400">🗂️ เลือกหมวดหมู่และอุปกรณ์ NT</h3>
+                <button onclick="closeProductModal()" class="text-white hover:text-slate-200 text-xl font-bold px-1">&times;</button>
             </div>
-            <div class="p-4 overflow-y-auto space-y-3 flex-1 bg-slate-50" id="modalCategoryList"></div>
+            <div class="p-3 sm:p-4 overflow-y-auto space-y-3 flex-1 bg-slate-50" id="modalCategoryList"></div>
             <div class="p-3 bg-white border-t text-right">
-                <button onclick="closeProductModal()" class="bg-slate-300 hover:bg-slate-400 text-slate-700 px-4 py-2 rounded-lg text-xs font-medium">ปิดหน้าต่าง</button>
+                <button onclick="closeProductModal()" class="w-full sm:w-auto bg-slate-300 hover:bg-slate-400 text-slate-700 px-4 py-2 rounded-lg text-xs font-medium">ปิดหน้าต่าง</button>
             </div>
         </div>
     </div>

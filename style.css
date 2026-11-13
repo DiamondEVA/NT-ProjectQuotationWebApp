@@ -2,21 +2,28 @@ body {
     font-family: 'Sarabun', sans-serif; 
     background-color: #f8fafc; 
     color: #1e293b; 
+    overflow-x: hidden;
 }
 
-/* สไตล์สำหรับพิมพ์เอกสาร A4 (จะซ่อนส่วนที่ไม่ต้องการพิมพ์ออกอัตโนมัติ) */
+@page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+}
+
+/* สไตล์สำหรับพิมพ์เอกสาร A4 */
 @media print {
     .no-print { 
         display: none !important; 
     }
-    body { 
+    html, body { 
         background: white !important; 
         padding: 0 !important; 
         margin: 0 !important; 
     }
     .print-container { 
         box-shadow: none !important; 
-        padding: 15px !important; 
+        border-radius: 0 !important;
+        padding: 6px 10px !important; 
         margin: 0 !important; 
         width: 100% !important; 
         max-width: 100% !important; 
@@ -30,12 +37,18 @@ body {
         color: #000 !important;
     }
     textarea { 
-        resize: none; 
+        resize: none !important; 
+        overflow: hidden !important;
     }
     table th { 
         background-color: #eab308 !important; 
         color: #1e293b !important; 
         -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact;
+    }
+    .bg-amber-100, .bg-amber-50\/60 {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
     .bg-slate-100, .bg-slate-50 { 
         background-color: transparent !important; 
